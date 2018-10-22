@@ -12,6 +12,17 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var lblNumber: UILabel!
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier! {    case "SVCSegue":
+            let source = segue.source as! ViewController
+            let destination = segue.destination as! SecondViewController
+            destination.setIncomingText(incoming: source.txtData.text!)
+        default:
+            NSLog("Unknown segue identifier -- " + segue.identifier!)
+            
+        }
+    }
+    
     var total = ""
     var opUsed = false
     var usingAvg = false
