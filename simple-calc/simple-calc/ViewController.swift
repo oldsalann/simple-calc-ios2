@@ -11,18 +11,26 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var lblNumber: UILabel!
+  
+    @IBAction func btnBacktoCalculator(_ sender: Any) {
+        performSegue(withIdentifier: "toHistory", sender: self)
+    }
     
+    
+    @IBOutlet weak var txtData: UITextField!
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        switch segue.identifier! {    case "SVCSegue":
-            let source = segue.source as! ViewController
-            let destination = segue.destination as! SecondViewController
-            destination.setIncomingText(incoming: source.txtData.text!)
+        switch segue.identifier! {
+        case "toHistory":
+            //let source = segue.source as! ViewController
+            let destination = segue.destination as! HistoryViewController
+            destination.setIncomingText(incoming: history)
         default:
             NSLog("Unknown segue identifier -- " + segue.identifier!)
-            
         }
     }
     
+    var history : [String] = []
+    var curHistVal = ""
     var total = ""
     var opUsed = false
     var usingAvg = false
@@ -74,6 +82,8 @@ class ViewController: UIViewController {
             retVal = mathOp(lhs: lh, rhs: rh, op: {($0 / $1)})
         case "+":
             retVal = mathOp(lhs: lh, rhs: rh, op: {($0 + $1)})
+        case "%":
+            retVal = mathOp(lhs: lh, rhs: rh, op: {($0 % $1)})
         default:
             break
         }
@@ -129,6 +139,7 @@ class ViewController: UIViewController {
                     }
                 }
                 let totalNum = runNum / div
+                curHistVal = lblNumber.text! + " = " + String(totalNum)
                 lblNumber.text = String(totalNum)
                 total = String(totalNum)
                 usingAvg = false
@@ -144,6 +155,7 @@ class ViewController: UIViewController {
                         runNum = runNum + 1
                     }
                 }
+                curHistVal = lblNumber.text! + " = " + String(runNum)
                 lblNumber.text = String(runNum)
                 total = String(runNum)
                 usingCount = false
@@ -159,6 +171,7 @@ class ViewController: UIViewController {
                         totalNum = performOp(totalNum, array[i+1], Int(array[i+2]) ?? 0)
                     }
                 }
+                curHistVal = lblNumber.text! + " = " + String(totalNum)
                 lblNumber.text = String(totalNum)
                 total = String(totalNum)
                 usingRegular = false
@@ -167,6 +180,7 @@ class ViewController: UIViewController {
         if (total == "0") {
             total = ""
         }
+        history.append(curHistVal)
     }
 }
 
